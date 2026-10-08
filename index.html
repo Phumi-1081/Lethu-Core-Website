@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lethu Core — Operations, handled</title>
+<meta name="description" content="Lethu Core is a done-for-you operations and customer experience service for small businesses. You buy the outcome; we run the people and the process behind it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Karla:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0E2338;
+    --teal:#146F6C;
+    --gold:#C8A660;
+    --silver:#CFD5DA;
+    --offwhite:#F7F5F0;
+
+    --bg:var(--offwhite);
+    --surface:#FFFFFF;
+    --surface-alt:#EFEDE7;
+    --text:var(--navy);
+    --text-muted:#4C6076;
+    --rule:#DCD8CF;
+    --accent:var(--teal);
+    --accent-warm:var(--gold);
+    --band:var(--navy);
+    --band-text:#F7F5F0;
+    --band-muted:#A9BACB;
+    --focus:var(--gold);
+    --btn-bg:#0E2338;
+    --btn-fg:#F7F5F0;
+    --btn-hover:#146F6C;
+
+    --measure:62ch;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0B1B2B;
+      --surface:#122639;
+      --surface-alt:#0F2133;
+      --text:#EDEAE3;
+      --text-muted:#A9BACB;
+      --rule:#22394F;
+      --accent:#4FB3AE;
+      --band:#081523;
+      --band-text:#EDEAE3;
+      --band-muted:#8FA5BA;
+      --btn-bg:#1A7C78;
+      --btn-fg:#F2F7F6;
+      --btn-hover:#22968F;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0B1B2B;
+    --surface:#122639;
+    --surface-alt:#0F2133;
+    --text:#EDEAE3;
+    --text-muted:#A9BACB;
+    --rule:#22394F;
+    --accent:#4FB3AE;
+    --band:#081523;
+    --band-text:#EDEAE3;
+    --band-muted:#8FA5BA;
+    --btn-bg:#1A7C78;
+    --btn-fg:#F2F7F6;
+    --btn-hover:#22968F;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *{animation:none !important; transition:none !important}
+  }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Karla","Helvetica Neue",Arial,sans-serif;
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:"Fraunces",Georgia,"Times New Roman",serif;
+    font-weight:500;
+    line-height:1.1;
+    letter-spacing:-0.015em;
+    margin:0;
+  }
+  p{margin:0 0 1em; max-width:var(--measure)}
+  a{color:inherit}
+  :focus-visible{outline:2px solid var(--focus); outline-offset:3px; border-radius:2px}
+
+  .wrap{width:min(1120px, 92vw); margin-inline:auto}
+
+  /* ---------- nav ---------- */
+  .nav{
+    position:sticky; top:0; z-index:50;
+    background:color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--rule);
+  }
+  .nav-in{display:flex; align-items:center; gap:2rem; padding:.9rem 0}
+  .brand{
+    font-family:"Fraunces",Georgia,serif; font-size:1.25rem; font-weight:600;
+    text-decoration:none; letter-spacing:-0.02em; white-space:nowrap;
+  }
+  .brand span{color:var(--accent)}
+  .nav-links{display:flex; gap:1.6rem; margin-left:auto; font-size:.95rem}
+  .nav-links a{text-decoration:none; color:var(--text-muted)}
+  .nav-links a:hover{color:var(--text)}
+  .btn{
+    display:inline-block; text-decoration:none; font-weight:600; font-size:.95rem;
+    padding:.7rem 1.2rem; border-radius:3px;
+    background:var(--btn-bg); color:var(--btn-fg); border:1px solid var(--btn-bg);
+  }
+  .btn:hover{background:var(--btn-hover); border-color:var(--btn-hover)}
+  .btn-ghost{background:transparent; color:var(--text); border:1px solid var(--rule)}
+  .btn-ghost:hover{background:transparent; border-color:var(--accent); color:var(--accent)}
+  @media (max-width:860px){ .nav-links{display:none} .nav-in{gap:1rem} }
+
+  /* ---------- hero ---------- */
+  .hero{padding:5.5rem 0 3.5rem; border-bottom:1px solid var(--rule)}
+  .hero h1{font-size:clamp(2.4rem, 6vw, 4.1rem); max-width:16ch}
+  .hero .lede{font-size:clamp(1.05rem,2.2vw,1.3rem); color:var(--text-muted); max-width:52ch; margin-top:1.4rem}
+  .hero-cta{display:flex; flex-wrap:wrap; gap:.8rem; margin-top:2rem}
+  .hero-meta{margin-top:2.6rem; padding-top:1.4rem; border-top:1px solid var(--rule); color:var(--text-muted); font-size:.92rem; max-width:60ch}
+
+  /* ---------- clarity strip ---------- */
+  .clarity{background:var(--band); color:var(--band-text); padding:3.2rem 0}
+  .clarity h2{font-size:clamp(1.5rem,3vw,2rem); color:var(--band-text); max-width:24ch}
+  .clarity-grid{display:grid; grid-template-columns:1fr 1fr; gap:2.5rem; margin-top:2rem}
+  @media (max-width:760px){ .clarity-grid{grid-template-columns:1fr; gap:1.8rem} }
+  .clarity h3{font-size:1.05rem; font-family:"Karla",sans-serif; font-weight:600; color:var(--gold); margin-bottom:.8rem}
+  .clarity ul{margin:0; padding-left:1.1rem; color:var(--band-muted); max-width:44ch}
+  .clarity li{margin-bottom:.55rem}
+  .clarity .yes li{color:var(--band-text)}
+
+  /* ---------- sections ---------- */
+  section{padding:4.5rem 0}
+  .sec-head{max-width:54ch; margin-bottom:2.4rem}
+  .sec-head h2{font-size:clamp(1.8rem,4vw,2.6rem)}
+  .sec-head p{color:var(--text-muted); margin-top:.9rem}
+
+  /* ---------- tabs ---------- */
+  .tabs{display:flex; flex-wrap:wrap; gap:.4rem; border-bottom:1px solid var(--rule); margin-bottom:2.2rem}
+  .tab{
+    font:inherit; font-weight:500; cursor:pointer;
+    background:none; border:none; border-bottom:2px solid transparent;
+    padding:.7rem .9rem; color:var(--text-muted);
+  }
+  .tab:hover{color:var(--text)}
+  .tab[aria-selected="true"]{color:var(--text); border-bottom-color:var(--accent)}
+  .panel[hidden]{display:none}
+  .panel-grid{display:grid; grid-template-columns:1.1fr 1fr; gap:3rem}
+  @media (max-width:820px){ .panel-grid{grid-template-columns:1fr; gap:2rem} }
+  .panel h3{font-size:clamp(1.5rem,3vw,2rem); margin-bottom:.9rem}
+  .panel .desc{color:var(--text-muted)}
+  .task-label{font-weight:600; font-size:.95rem; margin-bottom:.9rem}
+  .tasks{display:flex; flex-wrap:wrap; gap:.5rem; list-style:none; padding:0; margin:0}
+  .tasks li{
+    font-size:.9rem; padding:.42rem .75rem; border-radius:3px;
+    background:var(--surface-alt); border:1px solid var(--rule); color:var(--text-muted);
+  }
+  .panel .btn{margin-top:1.6rem}
+
+  /* ---------- steps ---------- */
+  .steps{display:grid; grid-template-columns:repeat(4,1fr); gap:1.6rem; counter-reset:s}
+  @media (max-width:900px){ .steps{grid-template-columns:1fr 1fr} }
+  @media (max-width:560px){ .steps{grid-template-columns:1fr} }
+  .step{padding-top:1.1rem; border-top:2px solid var(--accent)}
+  .step-n{font-family:"Fraunces",serif; font-size:.95rem; color:var(--accent); font-weight:600}
+  .step h3{font-size:1.15rem; font-family:"Karla",sans-serif; font-weight:600; margin:.5rem 0 .55rem; letter-spacing:0}
+  .step p{font-size:.94rem; color:var(--text-muted); margin:0}
+
+  /* ---------- why ---------- */
+  .why{background:var(--surface-alt); border-block:1px solid var(--rule)}
+  .why-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1.8rem}
+  @media (max-width:900px){ .why-grid{grid-template-columns:1fr 1fr} }
+  @media (max-width:600px){ .why-grid{grid-template-columns:1fr} }
+  .why-item h3{font-size:1.1rem; font-family:"Karla",sans-serif; font-weight:600; letter-spacing:0; margin-bottom:.5rem}
+  .why-item p{font-size:.94rem; color:var(--text-muted); margin:0}
+
+  /* ---------- proof ---------- */
+  .proof-card{
+    background:var(--surface); border:1px solid var(--rule);
+    border-left:3px solid var(--gold); padding:2rem; border-radius:3px;
+  }
+  .proof-card + .proof-card{margin-top:1.4rem}
+  .proof-card h3{font-size:1.2rem; font-family:"Karla",sans-serif; font-weight:600; letter-spacing:0; margin-bottom:.8rem}
+  .proof-card p{font-size:.96rem; color:var(--text-muted); max-width:78ch; margin-bottom:0}
+
+  /* ---------- contact ---------- */
+  .contact{background:var(--band); color:var(--band-text)}
+  .contact h2{color:var(--band-text); font-size:clamp(1.9rem,4vw,2.8rem); max-width:18ch}
+  .contact p{color:var(--band-muted); margin-top:1rem; max-width:48ch}
+  .contact-actions{display:flex; flex-wrap:wrap; gap:.8rem; margin-top:2rem}
+  .contact .btn{background:var(--gold); border-color:var(--gold); color:#0E2338}
+  .contact .btn:hover{background:#D9BC7E; border-color:#D9BC7E}
+  .contact .btn-ghost{background:transparent; color:var(--band-text); border-color:#35506B}
+  .contact .btn-ghost:hover{border-color:var(--gold); color:var(--gold)}
+
+  /* ---------- footer ---------- */
+  footer{padding:2.5rem 0; border-top:1px solid var(--rule); font-size:.9rem; color:var(--text-muted)}
+  .foot-in{display:flex; flex-wrap:wrap; gap:1.2rem; justify-content:space-between; align-items:center}
+  footer a{color:var(--text-muted)}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#top">Lethu<span>&nbsp;Core</span></a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#services">Services</a>
+      <a href="#who">Who we work with</a>
+      <a href="#how">How it works</a>
+      <a href="#why">Why Lethu Core</a>
+      <a href="#proof">Proof</a>
+    </nav>
+    <a class="btn" href="#contact">Book a free call</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="wrap">
+      <h1>You don't need another hire. You need the work done.</h1>
+      <p class="lede">Lethu Core takes recurring customer support, admin, reporting and sales operations off your desk—so you can focus on running and growing your business.</p>
+      <div class="hero-cta">
+        <a class="btn" href="#contact">Tell us what's taking your time</a>
+        <a class="btn btn-ghost" href="#services">See what we handle</a>
+      </div>
+      <p class="hero-meta">Built and run by Phumzile Sibanyone, a customer operations professional with experience across frontline support, billing, escalations and ecommerce operations for international brands.</p>
+    </div>
+  </section>
+
+  <section class="clarity" aria-labelledby="clarity-h">
+    <div class="wrap">
+      <h2 id="clarity-h">We are not a recruitment agency. You are buying the work, not a CV.</h2>
+      <div class="clarity-grid">
+        <div class="yes">
+          <h3>What you get</h3>
+          <ul>
+            <li>A service you hand over and stop thinking about</li>
+            <li>One point of contact who owns the outcome</li>
+            <li>Tools and process managed on our side, with support added as scope grows</li>
+            <li>Agreed turnaround times, and reporting that proves they were met</li>
+            <li>Month to month. No long-term contract or payroll commitment</li>
+          </ul>
+        </div>
+        <div>
+          <h3>What we don't do</h3>
+          <ul>
+            <li>Source candidates for you to interview</li>
+            <li>Hand you a shortlist and step back</li>
+            <li>Place staff on your payroll or your systems admin</li>
+            <li>Charge you a placement fee per head</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>What we handle</h2>
+        <p>Pick the function that's eating your week. Each one is delivered as a managed service—scoped, owned and quality-checked on our side.</p>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Services">
+        <button class="tab" role="tab" id="t-cx" aria-controls="p-cx" aria-selected="true">Customer experience</button>
+        <button class="tab" role="tab" id="t-ops" aria-controls="p-ops" aria-selected="false" tabindex="-1">Business operations &amp; admin</button>
+        <button class="tab" role="tab" id="t-data" aria-controls="p-data" aria-selected="false" tabindex="-1">Reporting &amp; operations analytics</button>
+        <button class="tab" role="tab" id="t-lead" aria-controls="p-lead" aria-selected="false" tabindex="-1">Lead &amp; sales support</button>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-cx" aria-labelledby="t-cx" tabindex="0">
+        <div class="panel-grid">
+          <div>
+            <h3>Your enquiries, answered properly</h3>
+            <p class="desc">Enquiries and tickets handled end to end — not just replied to. We work inside your systems, follow your tone, escalate what needs you, and close the rest. Response times and backlog are reported back to you weekly.</p>
+            <a class="btn" href="#contact">Talk about support cover</a>
+          </div>
+          <div>
+            <p class="task-label">Typical work in this service</p>
+            <ul class="tasks">
+              <li>Email &amp; chat support</li><li>Ticket management</li><li>Customer enquiries</li><li>Refunds &amp; returns</li><li>Billing queries</li><li>Cancellations &amp; pauses</li><li>Order management</li><li>Delivery follow-up</li><li>Escalations</li><li>Helpdesk &amp; macros</li><li>Retention &amp; win-back support</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-ops" aria-labelledby="t-ops" tabindex="0" hidden>
+        <div class="panel-grid">
+          <div>
+            <h3>The admin that never reaches the top of your list</h3>
+            <p class="desc">The coordinating work between you, your suppliers and your customers — quotes, records, bookings and follow-ups. We chase it, log it, and keep the thread moving until it's closed, so nothing dies in someone's inbox.</p>
+            <a class="btn" href="#contact">Hand over the admin</a>
+          </div>
+          <div>
+            <p class="task-label">Typical work in this service</p>
+            <ul class="tasks">
+              <li>Customer &amp; admin records</li><li>Order administration</li><li>Appointment &amp; admin support</li><li>CRM updates</li><li>Invoicing &amp; admin follow-up</li><li>Supplier coordination</li><li>Document management</li><li>Process documentation</li><li>General operational administration</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-data" aria-labelledby="t-data" tabindex="0" hidden>
+        <div class="panel-grid">
+          <div>
+            <h3>Numbers you can actually decide on</h3>
+            <p class="desc">Most small businesses have the data and no time to look at it. We build the tracker once, keep it current, and send you a short read on what changed and what it means — not a dashboard you'll never open.</p>
+            <a class="btn" href="#contact">Get your numbers in order</a>
+          </div>
+          <div>
+            <p class="task-label">Typical work in this service</p>
+            <ul class="tasks">
+              <li>Spreadsheet management</li><li>KPI tracking</li><li>Weekly &amp; monthly reporting</li><li>Sales &amp; lead tracking</li><li>Customer trends</li><li>Support metrics</li><li>Operational reporting</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-lead" aria-labelledby="t-lead" tabindex="0" hidden>
+        <div class="panel-grid">
+          <div>
+            <h3>A pipeline that gets worked, not just built</h3>
+            <p class="desc">Research, follow-up and pipeline admin, run consistently. You get enquiries chased and a list kept current, instead of leads going cold in a spreadsheet.</p>
+            <a class="btn" href="#contact">Fill the pipeline</a>
+          </div>
+          <div>
+            <p class="task-label">Typical work in this service</p>
+            <ul class="tasks">
+              <li>Lead research</li><li>Lead list building</li><li>CRM updates</li><li>Enquiry follow-up</li><li>Pipeline administration</li><li>Sales administration</li><li>Win-back &amp; retention support</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <p style="margin-top:2.2rem; color:var(--text-muted); font-size:.98rem; max-width:60ch">Need something else handled? If it sits within your day-to-day operations, tell us what it is and we'll scope it with you.</p>
+    </div>
+  </section>
+
+  <section id="who" style="border-top:1px solid var(--rule)">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Who we work with</h2>
+        <p>Any small or growing business with operational work piling up, but not yet ready to bring on another full-time employee.</p>
+      </div>
+      <div class="why-grid">
+        <div class="why-item"><h3>Ecommerce &amp; DTC</h3><p>Order support, returns, billing and reporting while you focus on the product and the brand.</p></div>
+        <div class="why-item"><h3>Plumbers &amp; electricians</h3><p>Enquiries answered, jobs booked and followed up, records kept current, while you're on site.</p></div>
+        <div class="why-item"><h3>Builders &amp; contractors</h3><p>Quotes chased, supplier coordination, project admin and client updates handled between site visits.</p></div>
+        <div class="why-item"><h3>Cleaning businesses</h3><p>Bookings, scheduling, client follow-up and records managed as the client list grows.</p></div>
+        <div class="why-item"><h3>Beauty businesses</h3><p>Enquiries, bookings and client records handled so appointment time stays appointment time.</p></div>
+        <div class="why-item"><h3>Repair &amp; service businesses</h3><p>Job tracking, parts follow-up, technician scheduling and customer updates, start to finish.</p></div>
+      </div>
+      <p style="margin-top:2rem; color:var(--text-muted); max-width:66ch">These businesses often need help with customer enquiries, bookings, admin, follow-ups, records, reporting and sales support while the owner focuses on delivering the actual service and growing the business.</p>
+    </div>
+  </section>
+
+  <section id="how" style="border-top:1px solid var(--rule)">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>How it works</h2>
+        <p>Four steps from first call to work running on our side — scoped and signed off before anything starts.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-n">Step one</div>
+          <h3>A free call</h3>
+          <p>Thirty minutes on what's actually taking your time. You'll leave the call with a straight answer on whether we can help, even if that answer is no.</p>
+        </div>
+        <div class="step">
+          <div class="step-n">Step two</div>
+          <h3>We map the work</h3>
+          <p>We write down the tasks, the tools and the turnaround times, and agree a monthly scope and price. Nothing starts until you've signed it off.</p>
+        </div>
+        <div class="step">
+          <div class="step-n">Step three</div>
+          <h3>Handover</h3>
+          <p>We learn your systems, document the process, and take the first tasks while you watch. You keep full access throughout.</p>
+        </div>
+        <div class="step">
+          <div class="step-n">Step four</div>
+          <h3>Running and reporting</h3>
+          <p>The work runs. You get a weekly report and a monthly review, and we adjust scope as the business changes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="why" class="why">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Why bring this to us</h2>
+        <p>The honest case for handing operations to a small managed service instead of hiring, or instead of doing it yourself at eleven at night.</p>
+      </div>
+      <div class="why-grid">
+        <div class="why-item">
+          <h3>A service, not another employee</h3>
+          <p>You pay for an agreed scope of work rather than taking on another full-time employee. We manage the delivery, processes and reporting on our side.</p>
+        </div>
+        <div class="why-item">
+          <h3>You deal with one person</h3>
+          <p>Not a rotating pool of account managers. The person who scoped your work is the person who answers your message.</p>
+        </div>
+        <div class="why-item">
+          <h3>Enterprise-grade processes, without the overhead</h3>
+          <p>The processes we use come from running support and billing for an international hardware brand, adapted to businesses that don't need a full department to run them.</p>
+        </div>
+        <div class="why-item">
+          <h3>Documented as we go</h3>
+          <p>Every process we take over gets written down. If you ever bring it back in house, you get the documentation with it.</p>
+        </div>
+        <div class="why-item">
+          <h3>Month to month</h3>
+          <p>Scope up when you're busy, scope down when you're not. Thirty days' notice, no penalty.</p>
+        </div>
+        <div class="why-item">
+          <h3>Your hours, not ours</h3>
+          <p>We already work UK and US hours. Your customers get answered when they're awake, not when Johannesburg is.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="proof">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>What "handled" looks like</h2>
+        <p>Two real examples of the work, with client names left out. This is the level of follow-through you're buying.</p>
+      </div>
+
+      <div class="proof-card">
+        <h3>One hardware ticket, eleven steps, zero customer chasing</h3>
+        <p>A customer reports a faulty component and can't install the replacement themselves. We request an install code from the technical team against the customer's address, confirm it with the customer, issue the invoice, and give the technician the go-ahead while flagging that the part is still in transit. We then chase the delivery estimate, go back to the repair team to book the technician for after that date, confirm the date with the customer, and hold the ticket open until the delivery partner sends photo confirmation that assembly is complete. The customer sends one email. We send about fifteen.</p>
+      </div>
+
+      <div class="proof-card">
+        <h3>Knowing which promotion actually won the customer back</h3>
+        <p>Every win-back offer is logged against the customer's previous plan, the plan they returned on, and the date they reactivated. After one quarter you stop guessing which discount works and start seeing which offer brings back the customers who stay. That tracker takes a few minutes a day to maintain and changes what you spend on retention.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <div class="wrap">
+      <h2>Tell us what's taking your time →</h2>
+      <p>Tell us what you'd like off your desk. We'll come back within one business day with whether we can take it on, what we'd recommend, and what it would cost..</p>
+      <div class="contact-actions">
+        <a class="btn" href="mailto:hello@lethucore.com?subject=Enquiry%20-%20Lethu%20Core&amp;body=Hi%20Lethu%20Core%2C%0A%0AThe%20work%20I%27d%20like%20help%20with%3A%0A%0AMy%20business%3A%0A%0ARoughly%20how%20many%20hours%20a%20week%20it%20takes%20now%3A%0A%0A">Send a short enquiry</a>
+        <a class="btn btn-ghost" href="https://calendar.app.google/SJvjrzpv6DuQMWYq8" target="_blank" rel="noopener">Book a free call</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <div>© 2026 Lethu Core (Pty) Ltd. Johannesburg, South Africa.</div>
+    <div><a href="mailto:hello@lethucore.com">hello@lethucore.com</a></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  function select(tab){
+    tabs.forEach(function(t){
+      var selected = t === tab;
+      t.setAttribute('aria-selected', selected ? 'true' : 'false');
+      t.tabIndex = selected ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !selected;
+    });
+  }
+  tabs.forEach(function(tab, i){
+    tab.addEventListener('click', function(){ select(tab); });
+    tab.addEventListener('keydown', function(e){
+      var next = null;
+      if(e.key === 'ArrowRight') next = tabs[(i+1) % tabs.length];
+      if(e.key === 'ArrowLeft') next = tabs[(i-1+tabs.length) % tabs.length];
+      if(e.key === 'Home') next = tabs[0];
+      if(e.key === 'End') next = tabs[tabs.length-1];
+      if(next){ e.preventDefault(); select(next); next.focus(); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
